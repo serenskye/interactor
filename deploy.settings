@@ -1,0 +1,10 @@
+siteUrl = https://github.com/serenskye/interactor
+gitUrl = https://github.com/serenskye/interactor.git
+version = x.y.z
+groupId = com.interactor
+licenses = ['GPL-3.0'] // or something else
+id = com.interactor
+name = interactor // actually not used
+developerId = serenskye
+developerEmail = serenskye@gmail.com
+developerName = Seren Matthews

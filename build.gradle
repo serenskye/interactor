@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1+"
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+}
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+ext {
+    minSdkVersion = 19
+    targetSdkVersion = 24
+    compileSdkVersion = 24
+    buildToolsVersion = '24.0.1'
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_7
+    targetCompatibilityVersion = JavaVersion.VERSION_1_7
+}
+
+def androidToolsVersion = '25.1.2'
+
+ext.deps = [
+        // Android
+        android           : 'com.google.android:android:2.1.2',
+        supportv4         : 'com.android.support:support-v4:24.1.0',
+        supportAnnotations: 'com.android.support:support-annotations:24.1.0',
+        androidGradle     : 'com.android.tools.build:gradle:2.1.2',
+
+        rxdroid           : 'io.reactivex:rxandroid:1.2.0',
+        rx                : 'io.reactivex:rxjava:1.1.5',
+
+        // Square
+        javapoet          : 'com.squareup:javapoet:1.7.0',
+
+        // Test dependencies
+        junit             : 'junit:junit:4.12',
+        autoservice       : 'com.google.auto.service:auto-service:1.0-rc2',
+        autocommon        : 'com.google.auto:auto-common:0.6',
+        powermockcore     : 'org.powermock:powermock-core:1.6.1',
+        powermockjunit    : 'org.powermock:powermock-module-junit4:1.6.1',
+        powermockito      : 'org.powermock:powermock-api-mockito:1.6.1'
+]
+

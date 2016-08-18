@@ -1,0 +1,3 @@
+include ':interactor-compiler', ':interactor-annotations'
+
+rootProject.name = 'interactor'
