@@ -15,6 +15,8 @@ and calls execute passing as an argument the as subscriber of type - the super g
 2. Extend AbstractInteractionProvider with your own implementation
 3. Make your Provider accessible  to your Presenters via the Application or a ServiceLocator.
 
+Note you will have to run build -> rebuild project in android studio to generate the files
+
 # Gradle
 In your build script add
 ```
