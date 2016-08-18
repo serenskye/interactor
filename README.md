@@ -15,6 +15,20 @@ and calls execute passing as an argument the as subscriber of type - the super g
 2. Extend AbstractInteractionProvider with your own implementation
 3. Make your Provider accessible  to your Presenters via the Application or a ServiceLocator.
 
+# Gradle
+In your build script add
+```
+    repositories {
+        maven { url 'https://dl.bintray.com/serenskye/mvp' }
+    }
+```
+
+Then in dependancies add
+```
+ compile 'com.interactor:interactor-annotations:X.X.X'
+ apt 'com.interactor:interactor-compiler:X.X.X'
+```
+
 # Example
 Your interactor class :
 
