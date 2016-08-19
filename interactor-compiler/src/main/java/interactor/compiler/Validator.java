@@ -2,9 +2,6 @@ package interactor.compiler;
 
 import com.interactor.Interactor;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
@@ -29,54 +26,5 @@ public class Validator {
       throw new ProcessingException(classElement, "The class %s is abstract. You can't annotate abstract classes with @%", classElement.getQualifiedName().toString(),
           Interactor.class.getSimpleName());
     }
-
-  /*  // Check inheritance: Class must be childclass as specified in @Factory.type();
-    TypeElement superClassElement =
-        elementUtils.getTypeElement(item.getQualifiedName());
-    if (superClassElement.getKind() == ElementKind.INTERFACE) {
-      // Check interface implemented
-      if (!classElement.getInterfaces().contains(superClassElement.asType())) {
-        throw new ProcessingException(classElement,
-            "The class %s annotated with @%s must implement the interface %s",
-            classElement.getQualifiedName().toString(), Presenter.class.getSimpleName(),
-            item.getQualifiedName());
-      }
-    } else {
-      // Check subclassing
-      TypeElement currentClass = classElement;
-      while (true) {
-        TypeMirror superClassType = currentClass.getSuperclass();
-
-        if (superClassType.getKind() == TypeKind.NONE) {
-          // Basis class (java.lang.Object) reached, so exit
-          throw new ProcessingException(classElement,
-              "The class %s annotated with @%s must inherit from %s",
-              classElement.getQualifiedName().toString(), Presenter.class.getSimpleName(),
-              item.getQualifiedName());
-        }
-
-        if (superClassType.toString().equals(item.getQualifiedName())) {
-          // Required super class found
-          break;
-        }
-
-        // Moving up in inheritance tree
-        currentClass = (TypeElement) typeUtils.asElement(superClassType);
-      }
-    }*/
-
-    // Check if an empty public constructor is given
-    for (Element enclosed : classElement.getEnclosedElements()) {
-      if (enclosed.getKind() == ElementKind.CONSTRUCTOR) {
-        ExecutableElement constructorElement = (ExecutableElement) enclosed;
-        if (constructorElement.getParameters().size() == 0 && constructorElement.getModifiers().contains(Modifier.PUBLIC)) {
-          // Found an empty constructor
-          return;
-        }
-      }
-    }
-
-    // No empty constructor found
-    throw new ProcessingException(classElement, "The class %s must provide an public empty default constructor", classElement.getQualifiedName().toString());
   }
 }

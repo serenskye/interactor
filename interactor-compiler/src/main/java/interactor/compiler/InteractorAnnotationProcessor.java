@@ -26,11 +26,10 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
-
 @AutoService(Processor.class)
 public class InteractorAnnotationProcessor extends AbstractProcessor {
 
-  private static final String PACKAGE_NAME = "com.joincoup.app.domain";
+  private static final String PACKAGE_NAME = "interactor";
   private static final String INTERFACE_NAME = "InteractorProvider";
   private static final String CLASS_NAME = "AbstractInteractorProvider";
 
@@ -63,7 +62,6 @@ public class InteractorAnnotationProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-
     for (Element annotatedElement : roundEnv.getElementsAnnotatedWith(Interactor.class)) {
       try {
         // Check if a class has been annotated with @Factory
@@ -73,7 +71,6 @@ public class InteractorAnnotationProcessor extends AbstractProcessor {
 
         // We can cast it, because we know that it of ElementKind.CLASS
         TypeElement typeElement = (TypeElement) annotatedElement;
-        System.out.println("annotated element " + typeElement.getSimpleName());
 
         InteractorAnnotatedClass annotatedClass = new InteractorAnnotatedClass(typeElement);
 
@@ -81,12 +78,11 @@ public class InteractorAnnotationProcessor extends AbstractProcessor {
 
         interactorAnnotatedClasses.add(annotatedClass);
       } catch (ProcessingException e) {
-        error(annotatedElement,"Interactor processing exception " +  e.getMessage());
+        error(annotatedElement, "Interactor processing exception " + e.getMessage());
       }
     }
 
-
-    System.out.println("write code - Interaction processor");
+    System.out.println("writeing code - Interaction processor");
     writeCode();
     interactorAnnotatedClasses.clear();
 
@@ -98,15 +94,9 @@ public class InteractorAnnotationProcessor extends AbstractProcessor {
       return;
     }
 
-    System.out.println("interactor annotated clases " + interactorAnnotatedClasses.size());
+    TypeSpec.Builder interfaceBuilder = TypeSpec.interfaceBuilder(INTERFACE_NAME).addJavadoc("Auto generated class").addModifiers(Modifier.PUBLIC);
 
-    TypeSpec.Builder interfaceBuilder = TypeSpec.interfaceBuilder(INTERFACE_NAME)
-        .addJavadoc("Auto generated class")
-        .addModifiers(Modifier.PUBLIC);
-
-    TypeSpec.Builder classBuilder = TypeSpec.classBuilder(CLASS_NAME)
-        .addJavadoc("Auto generated class")
-        .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
+    TypeSpec.Builder classBuilder = TypeSpec.classBuilder(CLASS_NAME).addJavadoc("Auto generated class").addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
 
     for (InteractorAnnotatedClass clazz : interactorAnnotatedClasses) {
       clazz.generateExecuteMethod(interfaceBuilder, classBuilder);
@@ -118,13 +108,12 @@ public class InteractorAnnotationProcessor extends AbstractProcessor {
     try {
       interfaceJavaFile.writeTo(filer);
     } catch (IOException e) {
-      e.printStackTrace();
+      System.out.println("cannnot write to filer  - Interaction processor" + e);
     }
 
     ClassName serviceInterface = ClassName.get("", INTERFACE_NAME);
     classBuilder.addSuperinterface(serviceInterface);
     TypeSpec classSpec = classBuilder.build();
-
 
     JavaFile classSpecJavaFile = JavaFile.builder(PACKAGE_NAME, classSpec).build();
 

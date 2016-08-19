@@ -3,7 +3,7 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 
 // This is the library version used when deploying the artifact
-version = "0.0.4"
+version = "0.0.5"
 
 sourceCompatibility = rootProject.ext.sourceCompatibilityVersion
 targetCompatibility = rootProject.ext.targetCompatibilityVersion
@@ -29,6 +29,8 @@ dependencies {
     testCompile deps.android
     testCompile deps.junit
     testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
+
+
 }
 
 

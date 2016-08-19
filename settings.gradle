@@ -1,3 +1,3 @@
-include ':interactor-compiler', ':interactor-annotations'
+include ':interactor-compiler', ':interactor-annotations', ':example'
 
 rootProject.name = 'interactor'

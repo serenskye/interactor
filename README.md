@@ -1,14 +1,15 @@
 # Interactor
+This utility is designed to help developers who use a Bob Martins clean architecture pattern. More specifically the use of Interactors with
+RXJava subscribers.  The utility uses annotation processing to generate a single facade (AbstractInteractorProvider) for executing your
+interactors. The reasoning for this is so that your presentation layer has one interface into your domain, this keeps things simple and clean.
+You can extend the AbstractInteractorProvider and add more services and domain layer actions.  For example, have a ServiceProvider which starts
+location updates, gcm services and other background processes, as well as your usual network operations (via interactors).
 
-Interactor is a helper utility that helps generate clean code when following Bob Martins clean architecture pattern.
+The code generater also creates an interface InteractorProvider so that you may easily unit test your code :). Your annotated interactors
+are expected to implement a baseclass (your choice) of Type T extends Subscriber.  This is so we can pass a subscriber as a parameter in the generated method.
+Your annotated class may have any number of constructor methods and take 0-n arguments.
 
-The library generates a file called "AbstractInteractorProvider" which implements "InteractorProvider".  This provider is used
-by your Presenters as a single interface/ facade to the domain layer.  The domain layer will contain your interactors (or commands)
-and services.  Because it implements an interface you can easily switch it out for unit testing :)
-
-The generated code creates a factory method which instantiates the annotated class (which should have an empty constructor)
-and calls execute passing as an argument the as subscriber of type - the super generic type of your annotated class.
- The idea being that you would create an interactor which subscribes to data of type T.  This is better explained with example code!
+This is better explained with example code(below) and there is also an example project in github.
 
 # How to use
 1. Annotate your interactors or commands with @interactor

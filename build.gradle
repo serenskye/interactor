@@ -45,6 +45,7 @@ ext.deps = [
         autocommon        : 'com.google.auto:auto-common:0.6',
         powermockcore     : 'org.powermock:powermock-core:1.6.1',
         powermockjunit    : 'org.powermock:powermock-module-junit4:1.6.1',
-        powermockito      : 'org.powermock:powermock-api-mockito:1.6.1'
+        powermockito      : 'org.powermock:powermock-api-mockito:1.6.1',
+
 ]
 
