@@ -6,7 +6,7 @@ You can extend the AbstractInteractorProvider and add more services and domain l
 location updates, gcm services and other background processes, as well as your usual network operations (via interactors).
 
 The code generater also creates an interface InteractorProvider so that you may easily unit test your code :). Your annotated interactors
-are expected to implement a baseclass (your choice) of Type T extends Subscriber.  This is so we can pass a subscriber as a parameter in the generated method.
+are expected to implement a baseclass (your choice) of Type T (T being your expected return object for your subscriber).  This is so we can pass a subscriber as a parameter in the generated method.
 Your annotated class may have any number of constructor methods and take 0-n arguments.
 
 This is better explained with example code(below) and there is also an example project in github.
