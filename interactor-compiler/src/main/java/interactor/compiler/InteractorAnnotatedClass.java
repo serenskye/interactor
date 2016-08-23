@@ -147,7 +147,7 @@ public class InteractorAnnotatedClass {
         if (!constructor.isEmpty()) {
           methodBuilder.addStatement("return new $T($L).getObservable()", interactorClassName, constructorParams.toString());
         } else {
-          methodBuilder.addStatement("new $T().getObservable()", interactorClassName);
+          methodBuilder.addStatement("return new $T().getObservable()", interactorClassName);
         }
 
         classBuilder.addMethod(methodBuilder.build());
