@@ -24,13 +24,15 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.SimpleTypeVisitor6;
 
+import rx.Observable;
 import rx.Subscriber;
 
 public class InteractorAnnotatedClass {
 
   private static final String PARAMETER_NAME = "subscriber";
 
-  private String methodName;
+  private String executeMethodName;
+  private String factoryMethodName;
 
   private TypeElement annotatedClassElement;
   private String qualifiedName;
@@ -50,7 +52,8 @@ public class InteractorAnnotatedClass {
     annotatedClassElement = classElement;
     qualifiedName = annotatedClassElement.getQualifiedName().toString();
     interactorClassName = ClassName.get(annotatedClassElement);
-    methodName = "execute" + interactorClassName.simpleName();
+    executeMethodName = "execute" + interactorClassName.simpleName();
+    factoryMethodName = "create" + interactorClassName.simpleName();
 
     constructors = getConstructors();
   }
@@ -80,7 +83,7 @@ public class InteractorAnnotatedClass {
     for (List<Param> constructor : constructors) {
       if (classBuilder != null) {
 
-        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(methodName).addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).addParameter(parameterSpec);
+        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(executeMethodName).addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).addParameter(parameterSpec);
 
         StringBuilder constructorParams = new StringBuilder();
         //add constructor params
@@ -106,13 +109,60 @@ public class InteractorAnnotatedClass {
       }
 
       if (interfaceBuilder != null) {
-        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(methodName).addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT).addParameter(parameterSpec).returns(void.class);
+        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(executeMethodName).addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT).addParameter(parameterSpec).returns(void.class);
         if (!constructor.isEmpty()) {
           for (int i = 0; i < constructor.size(); i++) {
             Param param = constructor.get(i);
             methodBuilder.addParameter(ParameterSpec.builder(ParameterizedTypeName.get(param.type), param.name, Modifier.FINAL).build());
           }
         }
+        interfaceBuilder.addMethod(methodBuilder.build());
+      }
+    }
+  }
+
+  public void generateFactoryMethod(TypeSpec.Builder interfaceBuilder, TypeSpec.Builder classBuilder) {
+
+    //get parameters
+    for (List<Param> constructor : constructors) {
+      if (classBuilder != null) {
+
+        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(factoryMethodName).addAnnotation(Override.class).addModifiers(Modifier.PUBLIC);
+
+        StringBuilder constructorParams = new StringBuilder();
+        //add constructor params
+        for (int i = 0; i < constructor.size(); i++) {
+          Param param = constructor.get(i);
+          String name = param.name;
+          constructorParams.append(name);
+          if (i != constructor.size() - 1) {
+            //not last
+            constructorParams.append(", ");
+          }
+          methodBuilder.addParameter(ParameterSpec.builder(ParameterizedTypeName.get(param.type), name, Modifier.FINAL).build());
+        }
+
+        ParameterizedTypeName returnType = ParameterizedTypeName.get(ClassName.get(Observable.class), WildcardTypeName.get(interactorReturnType));
+        methodBuilder.returns(returnType);
+        if (!constructor.isEmpty()) {
+          methodBuilder.addStatement("return new $T($L).getObservable()", interactorClassName, constructorParams.toString());
+        } else {
+          methodBuilder.addStatement("new $T().getObservable()", interactorClassName);
+        }
+
+        classBuilder.addMethod(methodBuilder.build());
+      }
+
+      if (interfaceBuilder != null) {
+        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(factoryMethodName).addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT);
+        if (!constructor.isEmpty()) {
+          for (int i = 0; i < constructor.size(); i++) {
+            Param param = constructor.get(i);
+            methodBuilder.addParameter(ParameterSpec.builder(ParameterizedTypeName.get(param.type), param.name, Modifier.FINAL).build());
+          }
+        }
+        ParameterizedTypeName returnType = ParameterizedTypeName.get(ClassName.get(Observable.class), WildcardTypeName.get(interactorReturnType));
+        methodBuilder.returns(returnType);
         interfaceBuilder.addMethod(methodBuilder.build());
       }
     }

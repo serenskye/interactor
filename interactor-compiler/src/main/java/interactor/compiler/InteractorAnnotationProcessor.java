@@ -100,6 +100,7 @@ public class InteractorAnnotationProcessor extends AbstractProcessor {
 
     for (InteractorAnnotatedClass clazz : interactorAnnotatedClasses) {
       clazz.generateExecuteMethod(interfaceBuilder, classBuilder);
+      clazz.generateFactoryMethod(interfaceBuilder, classBuilder);
     }
 
     TypeSpec interfaceSpec = interfaceBuilder.build();
