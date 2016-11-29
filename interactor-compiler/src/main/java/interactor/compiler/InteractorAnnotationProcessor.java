@@ -82,7 +82,6 @@ public class InteractorAnnotationProcessor extends AbstractProcessor {
       }
     }
 
-    System.out.println("writeing code - Interaction processor");
     writeCode();
     interactorAnnotatedClasses.clear();
 
@@ -109,7 +108,7 @@ public class InteractorAnnotationProcessor extends AbstractProcessor {
     try {
       interfaceJavaFile.writeTo(filer);
     } catch (IOException e) {
-      System.out.println("cannnot write to filer  - Interaction processor" + e);
+      System.out.println("Interaction processor ERROR cannnot write to filer  - " + e);
     }
 
     ClassName serviceInterface = ClassName.get("", INTERFACE_NAME);
@@ -121,7 +120,7 @@ public class InteractorAnnotationProcessor extends AbstractProcessor {
     try {
       classSpecJavaFile.writeTo(filer);
     } catch (IOException e) {
-      System.out.println("cannnot write to filer  - Interaction processor" + e);
+      System.out.println("Interaction processor ERROR cannnot write to filer  - " + e);
     }
   }
 
